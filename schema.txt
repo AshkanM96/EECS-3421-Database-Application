@@ -1,0 +1,96 @@
+create table yrb_customer (
+    cid   smallint  not null,
+    name  varchar(20),
+    city  varchar(15),
+    constraint yrb_customer_pk
+        primary key (cid)
+);
+
+create table yrb_club (
+    club varchar(15) not null,
+    desc varchar(50),
+    constraint yrb_club_pk
+        primary key (club)
+);
+
+create table yrb_member (
+    club  varchar(15)  not null,
+    cid   smallint     not null,
+    constraint yrb_member_pk
+        primary key (club, cid),
+    constraint yrb_mem_fk_club
+        foreign key (club) references yrb_club,
+    constraint yrb_mem_fk_cust
+        foreign key (cid) references yrb_customer
+);
+
+create table yrb_category (
+    cat varchar(10) not null,
+    constraint yrb_category_pk
+        primary key (cat)
+);
+
+create table yrb_book (
+    title     varchar(25)  not null,
+    year      smallint     not null,
+    language  varchar(10),
+    cat       varchar(10)  not null,
+    weight    smallint     not null,
+    constraint yrb_book_pk
+        primary key (title, year),
+    constraint yrb_book_fk_cat
+        foreign key (cat) references yrb_category,
+    constraint yrb_book_weight
+        check (weight > 0)
+);
+
+create table yrb_offer (
+    club   varchar(15)  not null,
+    title  varchar(25)  not null,
+    year   smallint     not null,
+    price  decimal(5,2) not null,
+    constraint yrb_off_pk
+        primary key (club, title, year),
+    constraint yrb_off_fk_club
+        foreign key (club) references yrb_club,
+    constraint yrb_off_fk_book
+        foreign key (title, year) references yrb_book,
+    constraint yrb_off_price
+        check (price > 0)
+);
+
+create table yrb_purchase (
+    cid    smallint     not null,
+    club   varchar(15)  not null,
+    title  varchar(25)  not null,
+    year   smallint     not null,
+    when   timestamp    not null,
+    qnty   smallint     not null,
+    constraint yrb_pur_pk
+        primary key (cid, club, title, year, when),
+    constraint yrb_pur_fk_offer
+        foreign key (club, title, year) references yrb_offer,
+    constraint yrb_pur_fk_mem
+        foreign key (club, cid) references yrb_member,
+    constraint yrb_pur_qnty
+        check (qnty > 0)
+);
+
+-- A prettier way to view the PURCHASE table.
+create view pretty_purchase as
+    (select cast (cid as decimal(2)) as cid,
+            title,
+            club,
+            year,
+            cast (when as date) as day,
+            cast (when as time) as time
+        from yrb_purchase);
+
+create table yrb_shipping (
+    weight  smallint     not null,
+    cost    decimal(5,2) not null,
+    constraint yrb_shipping_pk
+        primary key (weight),
+    constraint yrb_ship_uni_cost
+        unique (cost)
+);
