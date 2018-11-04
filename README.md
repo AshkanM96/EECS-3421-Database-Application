@@ -1,4 +1,5 @@
-## EECS-3421
+## EECS-3421-Database-Application
+
 York River Bookseller's Database Search and Purchase Application Program
 
 This is just a repository of a search and purchase *Java* application that operates on the *York River Bookseller's Database* (YRB for short).
