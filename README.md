@@ -2,7 +2,7 @@
 
 York River Bookseller's Database Search and Purchase Application Program
 
-This is just a repository of a search and purchase *Java* application that operates on the *York River Bookseller's Database* (YRB for short).
+This is just a repository of a search and purchase application written in *Java* that operates on the *York River Bookseller's Database* (YRB for short).
 
 The application can be executed on York University's computers or any computer that has a DB2 license.
 
